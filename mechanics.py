@@ -96,8 +96,8 @@ class GameState:
 
 
 
-    def empty_gameboard(self, rows, columns):
-        gameboard = [[' ' for c in range(columns)] for r in range(rows)]
+    def empty_gameboard(self):
+        gameboard = [[' ' for c in range(self._columns)] for r in range(self._rows)]
         for gb in gameboard:
             self._gameboard.append(gb)
 
