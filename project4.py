@@ -30,17 +30,40 @@ def init_gamestate():
 
 
 def commands(gamestate: mechanics.GameState):
-    command = input()
-    if command[0] == ' ':
-        gamestate.pass_time()
-    elif command[0] == 'F':
-        command = command.split()
-        faller = mechanics.Faller()
-        faller.new_faller(int(command[1]), command[2:])
-        gamestate.set_faller(faller)
-        gamestate.update_faller()
+    faller = mechanics.Faller()
+    faller.set_max_columns(gamestate.get_columns())
+    while True:
+        command = input()
         
-    return gamestate
+        try:
+            if command[0] == ' ':
+                faller.get_colors()
+                gamestate.pass_time()
+                gamestate.update_faller(faller)
+            elif command[0] == 'F':
+                command = command.split()
+                faller = mechanics.Faller()
+                faller.new_faller(int(command[1]), command[2:])
+                gamestate.update_faller(faller)
+            elif command[0] == 'R':
+                faller.rotate()
+                gamestate.update_faller(faller)
+            elif command[0] == '<':
+                faller.move_left()
+                gamestate.move_faller(faller)
+                gamestate.update_faller(faller)
+            elif command[0] == '>':
+                faller.move_right()
+                gamestate.move_faller(faller)
+                gamestate.update_faller(faller)
+            elif command[0] == 'Q':
+                break 
+            
+        except IndexError:
+            pass
+
+        display(gamestate)
+
 
 def display(gamestate):
     print(gamestate.get_gameboard())
@@ -51,7 +74,7 @@ def display(gamestate):
     for r in range(2, gamestate.get_rows()):
         output += '|'
         for c in range(gamestate.get_columns()):
-            if gameboard[r][c][0] == '[' or gameboard[r][c][0] == '*':
+            if gameboard[r][c][0] == '[' or gameboard[r][c][0] == '*' or gameboard[r][c][0] == '|':
                 output += gameboard[r][c]
             else:
                 output += f' {gameboard[r][c]} '
@@ -68,8 +91,8 @@ def display(gamestate):
 if __name__ == "__main__":
     gamestate = init_gamestate()
     display(gamestate)
-    gamestate = commands(gamestate)
-    display(gamestate)
+    commands(gamestate)
+    
     
 
     
