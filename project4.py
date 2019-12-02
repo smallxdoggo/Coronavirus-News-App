@@ -35,32 +35,32 @@ def commands(gamestate: mechanics.GameState):
     while True:
         command = input()
         
-        try:
-            if command[0] == ' ':
-                faller.get_colors()
-                gamestate.pass_time()
-                gamestate.update_faller(faller)
-            elif command[0] == 'F':
-                command = command.split()
-                faller = mechanics.Faller()
-                faller.new_faller(int(command[1]), command[2:])
-                gamestate.update_faller(faller)
-            elif command[0] == 'R':
-                faller.rotate()
-                gamestate.update_faller(faller)
-            elif command[0] == '<':
-                faller.move_left()
-                gamestate.move_faller(faller)
-                gamestate.update_faller(faller)
-            elif command[0] == '>':
-                faller.move_right()
-                gamestate.move_faller(faller)
-                gamestate.update_faller(faller)
-            elif command[0] == 'Q':
-                break 
-            
-        except IndexError:
-            pass
+        #try:
+        if command[0] == ' ':
+            faller.get_colors()
+            gamestate.pass_time()
+            gamestate.update_faller(faller)
+        elif command[0] == 'F':
+            command = command.split()
+            faller = mechanics.Faller()
+            faller.new_faller(int(command[1]), command[2:])
+            gamestate.update_faller(faller)
+        elif command[0] == 'R':
+            faller.rotate()
+            gamestate.update_faller(faller)
+        elif command[0] == '<':
+            faller.move_left()
+            gamestate.move_faller(faller)
+            gamestate.update_faller(faller)
+        elif command[0] == '>':
+            faller.move_right()
+            gamestate.move_faller(faller)
+            gamestate.update_faller(faller)
+        elif command[0] == 'Q':
+            break 
+        
+        #except IndexError:
+         #   pass
 
         display(gamestate)
 
