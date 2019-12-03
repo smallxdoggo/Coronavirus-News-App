@@ -20,6 +20,7 @@ class Faller:
         self._freezing_row = 99
     
     def new_faller(self, column: int, faller: list):
+        '''Creates a new faller at a specific column'''
         self._row = 3
         self._column = column
         self._prev_column = column
@@ -29,31 +30,39 @@ class Faller:
         self._freezing = False
 
     def rotate(self):
+        '''Rotates faller using deque'''
         self._colors.rotate(-1)
         #print(self._colors)
 
 
-    def set_freezing(self, row):
-        self._freezing = True 
+    def set_freezing(self, freezing, row):
+        '''sets the faller as freezing at a row'''
+        self._freezing = freezing 
         self._freezing_row = row
         #print('FREEZING')
-
+ 
     def is_freezing(self):
+        '''gets _freezing'''
         return self._freezing   
 
     def is_frozen(self):
+        '''gets _is_frozen'''
         return self._is_frozen
 
     def get_freezing_row(self):
+        '''gets the freezing row'''
         return self._freezing_row
 
     def get_colors(self):
+        '''gets the list of colors'''
         return list(self._colors)
 
     def get_column(self):
+        '''gets the column the faller is in'''
         return self._column
     
     def get_prev_column(self):
+
         return self._prev_column
 
     def get_row(self):
@@ -63,25 +72,30 @@ class Faller:
         self._row = row
 
     def set_max_columns(self, max_columns):
+        '''for use in move_right() to avoid index errors'''
         self._max_columns = max_columns
     
     def left_is_blocked(self, blocked):
+        '''sets left_is_blocked as True or False '''
         self._left_is_blocked = blocked
 
 
     def right_is_blocked(self, blocked):
+        '''sets right_is_blocked as True or False '''
         self._right_is_blocked = blocked
 
    
 
     def move_left(self):
+        '''subtracts the column'''
         if self._column > 0 and not self._is_frozen and not self._left_is_blocked:
             self._prev_column = self._column
             self._column -= 1
             #print(self._column)
-            #print(self._left_is_blocked)
+            #print(self._left=_is_blocked)
     
     def move_right(self):
+        '''adds the column'''
         if self._column < self._max_columns+1 and not self._is_frozen and not self._right_is_blocked:
             self._prev_column = self._column
             self._column += 1
@@ -89,10 +103,12 @@ class Faller:
             #print(self._right_is_blocked)
 
     def pass_time(self):
+        '''move the faller down'''
         self._row += 1
         self._prev_column = self._column
 
     def freeze(self):
+        '''sets the faller as frozen'''
         self._colors = deque([])
         self._is_frozen = True
         self._freezing = False
@@ -111,15 +127,19 @@ class GameState:
         self._faller = None
 
     def get_gameboard(self):
+        '''gets the gameboard array'''
         return self._gameboard
     
     def get_rows(self):
+        '''length of the gameboard rows'''
         return len(self._gameboard)
 
     def get_columns(self):
+        '''length of the gameboard columns'''
         return len(self._gameboard[0])
 
     def pass_time(self):
+        '''move everything down one if it can'''
         for r in range(len(self._gameboard) - 1, 0, -1):
             for c in range(len(self._gameboard[0])):
                 if self._gameboard[r][c] == ' ':
@@ -137,6 +157,7 @@ class GameState:
         return self._faller
 
     def update_faller(self, faller: Faller):
+        '''updates the current faller appearance on the gameboard'''
         self._faller = faller
         column = self._faller.get_column()
         prev_column = self._faller.get_prev_column()
@@ -160,7 +181,7 @@ class GameState:
                 self._faller.left_is_blocked(False)
 
             
-            if column >= self._columns-1:
+            if column >= self._columns:
                 #print('right is blocked')
                 self._faller.right_is_blocked(True)
             elif not self._gameboard[row-1][column] == ' ':
@@ -190,19 +211,22 @@ class GameState:
                 for r in range(row-3, row):  
                     prev_column = column
                     self._gameboard[r][column-1] = f'|{colors[row - r - 1]}|'
-                self._faller.set_freezing(row)
+                self._faller.set_freezing(True, row)
                 freezing_row = row   
             
             else:
                 for r in range(row-3, row):  
                     prev_column = column
                     self._gameboard[r][column-1] = f'[{colors[row - r - 1]}]'
+                    self._faller.set_freezing(False, row)
+                    
 
         #print(f'freezing is {self._faller.is_freezing()}')
         
         
         
     def move_faller(self, faller):
+        '''updates previous column to empty'''
         self._faller = faller
         column = self._faller.get_column()
         prev_column = self._faller.get_prev_column()
@@ -220,20 +244,27 @@ class GameState:
             
 
     def empty_gameboard(self):
+        '''initializes an empty gameboard'''
         gameboard = [[' ' for c in range(self._columns)] for r in range(self._rows)]
         for gb in gameboard:
             self._gameboard.append(gb)
 
     def set_gameboard(self, gameboard):
+        '''sets gameboard with contents'''
         for gb in gameboard:
             self._gameboard.append(gb)
         
     def check_matches(self) -> bool:
-        for r in range(len(self._gameboard)):
+        '''check for matches'''
+        for r in range(len(self._gameboard)-1, 0, -1):
             for c in range(len(self._gameboard[0])-2):
                 if not self._gameboard[r][c] == ' ' and self._gameboard[r][c] == self._gameboard[r][c+1] == self._gameboard[r][c+2]:
                     #print('COLUMNS EQUAL')
-                    for x in range(3):
+                    matches = 0
+                    while c+matches+1 < len(self._gameboard[r]) and self._gameboard[r][c+matches] == self._gameboard[r][c+matches+1]:
+                        matches += 1
+
+                    for x in range(matches+1):
                         self._gameboard[r][c+x] = f'*{self._gameboard[r][c+x]}*' 
                     return True
                          
@@ -241,6 +272,9 @@ class GameState:
             for c in range(len(self._gameboard[0])):
                 if not self._gameboard[r][c] == ' ' and self._gameboard[r][c] == self._gameboard[r+1][c] == self._gameboard[r+2][c]:
                     #print('ROWS EQUAL')
+                    
+                    
+
                     for x in range(3):
                         self._gameboard[r+x][c] = f'*{self._gameboard[r+x][c]}*' 
                     return True
@@ -260,20 +294,24 @@ class GameState:
                     for x in range(3):
                         self._gameboard[r-x][c+x] = f'*{self._gameboard[r-x][c+x]}*' 
                     return True
+
         return False
     
-    def check_game_over(self):
-        print('checking game over')
-        row = self._faller.get_row()
-        is_frozen = self._faller.is_frozen()
-        #print(row)
-        #print(is_frozen)
-        if row <= 5 and is_frozen:
-            return True
-        else:
-            return False
+    def check_game_over(self) -> bool:
+        '''checks if game over'''
+        #print('checking game over')
+        if not self._faller == None:
+            row = self._faller.get_row()
+            is_frozen = self._faller.is_frozen()
+            #print(row)
+            #print(is_frozen)
+            if row <= 5 and is_frozen:
+                return True
+            else:
+                return False
 
     def update_gameboard(self):
+        '''removes matches and drops all the gameboard'''
         #print('Updating Gameboard')
 
         for r in range(len(self._gameboard)):

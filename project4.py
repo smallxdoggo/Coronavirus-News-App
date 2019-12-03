@@ -21,12 +21,14 @@ def init_gamestate():
         gamestate.empty_gameboard()
         
     elif begin == 'CONTENTS':
-        #print('is CONTENTS')
+        print('is CONTENTS')
         gameboard = []
         for x in range(rows):
             contents = list(input())
             
             gameboard.append(contents)
+
+        print(gameboard)    
         gamestate.set_gameboard(gameboard)
         gamestate.update_gameboard()
 
@@ -34,6 +36,7 @@ def init_gamestate():
 
 
 def commands(gamestate: mechanics.GameState):
+    
     faller = mechanics.Faller()
     faller.set_max_columns(gamestate.get_columns())
     while True:
@@ -45,7 +48,11 @@ def commands(gamestate: mechanics.GameState):
             #display(gamestate)
             continue
         
-
+        game_over = gamestate.check_game_over()
+        if game_over:
+            print('GAME OVER')
+            break
+        
         command = input()
         
         #try:
@@ -77,10 +84,7 @@ def commands(gamestate: mechanics.GameState):
         #except IndexError:
          #   pass
         
-        game_over = gamestate.check_game_over()
-        if game_over:
-            print('GAME OVER')
-            break
+        
 
 
 def display(gamestate):
