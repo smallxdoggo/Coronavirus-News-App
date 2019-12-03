@@ -1,3 +1,6 @@
+# JERON ARTEST 
+# 14616419
+
 # project4.py
 
 import mechanics
@@ -8,17 +11,17 @@ colors = ['A', 'B', 'C']
 faller = mechanics.Faller()
 
 def init_gamestate():
-    rows = int(input('Rows: '))
-    columns = int(input('Columns: '))
+    rows = int(input()) #int(input('Rows: '))
+    columns = int(input()) #int(input('Columns: '))
     gamestate = mechanics.GameState(rows, columns)
 
-    begin = input('Empty or w/ contents: ').upper()
+    begin = input() #input('Empty or w/ contents: ').upper()
     if begin == 'EMPTY':
-        print('is EMPTY')
+        #print('is EMPTY')
         gamestate.empty_gameboard()
         
     elif begin == 'CONTENTS':
-        print('is CONTENTS')
+        #print('is CONTENTS')
         gameboard = []
         for x in range(rows):
             contents = list(input())
@@ -45,7 +48,7 @@ def commands(gamestate: mechanics.GameState):
         command = input()
         
         #try:
-        if command[0] == ' ':
+        if not command:
             faller.get_colors()
             gamestate.pass_time()
             gamestate.update_faller(faller)
