@@ -42,7 +42,7 @@ class Faller:
         return self._freezing   
 
     def is_frozen(self):
-        return self._fro
+        return self._is_frozen
 
     def get_freezing_row(self):
         return self._freezing_row
@@ -94,7 +94,6 @@ class Faller:
 
     def freeze(self):
         self._colors = deque([])
-        self._row = 3
         self._is_frozen = True
         self._freezing = False
         self._left_is_blocked = True
@@ -183,7 +182,9 @@ class GameState:
                 for r in range(row-3, row):  
                     prev_column = column
                     self._gameboard[r-1][column-1] = f'{colors[row - r - 1]}'
+                self.check_game_over()
                 self._faller.freeze()
+                
                 #print('FROZE')
             elif row >= len(self._gameboard) or not self._gameboard[row][column-1] == ' ' :
                 for r in range(row-3, row):  
@@ -261,6 +262,16 @@ class GameState:
                     return True
         return False
     
+    def check_game_over(self):
+        print('checking game over')
+        row = self._faller.get_row()
+        is_frozen = self._faller.is_frozen()
+        #print(row)
+        #print(is_frozen)
+        if row <= 5 and is_frozen:
+            return True
+        else:
+            return False
 
     def update_gameboard(self):
         #print('Updating Gameboard')
@@ -276,4 +287,6 @@ class GameState:
                 if not self._gameboard[r][c][0] == ' ' and self._gameboard[r+1][c][0] == ' ':
                     self.pass_time()
                     self.update_gameboard()
+
+
     

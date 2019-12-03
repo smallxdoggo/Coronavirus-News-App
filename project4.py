@@ -44,6 +44,7 @@ def commands(gamestate: mechanics.GameState):
             gamestate.update_gameboard()
             #display(gamestate)
             continue
+        
 
         command = input()
         
@@ -52,7 +53,7 @@ def commands(gamestate: mechanics.GameState):
             faller.get_colors()
             gamestate.pass_time()
             gamestate.update_faller(faller)
-            
+            game_over = gamestate.check_game_over()
         elif command[0] == 'F':
             command = command.split()
             faller = mechanics.Faller()
@@ -76,7 +77,10 @@ def commands(gamestate: mechanics.GameState):
         #except IndexError:
          #   pass
         
-        
+        game_over = gamestate.check_game_over()
+        if game_over:
+            print('GAME OVER')
+            break
 
 
 def display(gamestate):
