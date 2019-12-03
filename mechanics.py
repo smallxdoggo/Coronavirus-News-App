@@ -19,11 +19,12 @@ class Faller:
         self._column = column
         self._prev_column = column
         self._colors = deque(faller)
+        self._colors.reverse()
         self._is_frozen = False
         self._freezing = False
 
     def rotate(self):
-        self._colors.rotate(1)
+        self._colors.rotate(-1)
         print(self._colors)
 
 
@@ -34,6 +35,9 @@ class Faller:
 
     def is_freezing(self):
         return self._freezing   
+
+    def is_frozen(self):
+        return self._fro
 
     def get_freezing_row(self):
         return self._freezing_row
@@ -140,68 +144,72 @@ class GameState:
         print(colors)
 
         
+        if row - 1 < len(self._gameboard):
+            if column <= 1:
+                print('left is blocked')
+                self._faller.left_is_blocked(True)
+            elif not self._gameboard[row-1][column-2] == ' ':
+                print('left is blocked')
+                self._faller.left_is_blocked(True)
+            else:
+                print('left is NOT blocked')
+                self._faller.left_is_blocked(False)
+
+            
+            if column >= self._columns-1:
+                print('right is blocked')
+                self._faller.right_is_blocked(True)
+            elif not self._gameboard[row-1][column] == ' ':
+                print('right is blocked')
+                self._faller.right_is_blocked(True)
+            else:
+                print('right is NOT blocked')
+                self._faller.right_is_blocked(False)
+
+        else:
+            pass
+
+
          
         print(f'freezing is {is_freezing}')
 
-        if freezing_row < row and is_freezing:
-            for r in range(row-3, row):  
-                prev_column = column
-                self._gameboard[r-1][column-1] = f'{colors[row - r - 1]}'
-            self._faller.freeze()
-            print('FROZE')
-        elif row >= len(self._gameboard) or not self._gameboard[row][column-1] == ' ' :
-            for r in range(row-3, row):  
-                prev_column = column
-                self._gameboard[r][column-1] = f'|{colors[row - r - 1]}|'
-            self._faller.set_freezing(row)
-            freezing_row = row   
-           
-        else:
-            for r in range(row-3, row):  
-                prev_column = column
-                self._gameboard[r][column-1] = f'[{colors[row - r - 1]}]'
+        if len(colors) > 0:
+            if freezing_row < row and is_freezing:
+                for r in range(row-3, row):  
+                    prev_column = column
+                    self._gameboard[r-1][column-1] = f'{colors[row - r - 1]}'
+                self._faller.freeze()
+                print('FROZE')
+            elif row >= len(self._gameboard) or not self._gameboard[row][column-1] == ' ' :
+                for r in range(row-3, row):  
+                    prev_column = column
+                    self._gameboard[r][column-1] = f'|{colors[row - r - 1]}|'
+                self._faller.set_freezing(row)
+                freezing_row = row   
+            
+            else:
+                for r in range(row-3, row):  
+                    prev_column = column
+                    self._gameboard[r][column-1] = f'[{colors[row - r - 1]}]'
 
         print(f'freezing is {self._faller.is_freezing()}')
         
-        print("test")
         
         
     def move_faller(self, faller):
         self._faller = faller
         column = self._faller.get_column()
         prev_column = self._faller.get_prev_column()
-        colors = self._faller.get_colors()
         row = self._faller.get_row()
-        is_freezing = self._faller.is_freezing()
         print(row)
-        print(colors)
 
         if not prev_column == column:
             for r in range(row-3, row):
                 self._gameboard[r][prev_column-1] = ' ' 
         
         # TODO: FIGURE OUT THE BEST WAY TO HANDLE INDEX ERROR HERE.
-        print(self._gameboard[row-1][column-1])
-        if column <= 1:
-            print('left is blocked')
-            self._faller.left_is_blocked(True)
-        elif not self._gameboard[row-1][column-2] == ' ':
-            print('left is blocked')
-            self._faller.left_is_blocked(True)
-        else:
-            print('left is NOT blocked')
-            self._faller.left_is_blocked(False)
-
+        #print(self._gameboard[row-1][column-1])
         
-        if column >= self._columns:
-            print('right is blocked')
-            self._faller.right_is_blocked(True)
-        elif not self._gameboard[row-1][column] == ' ':
-            print('right is blocked')
-            self._faller.right_is_blocked(True)
-        else:
-            print('right is NOT blocked')
-            self._faller.right_is_blocked(False)
 
          
             
@@ -215,10 +223,53 @@ class GameState:
         for gb in gameboard:
             self._gameboard.append(gb)
         
-   
+    def check_matches(self) -> bool:
+        for r in range(len(self._gameboard)):
+            for c in range(len(self._gameboard[0])-2):
+                if not self._gameboard[r][c] == ' ' and self._gameboard[r][c] == self._gameboard[r][c+1] == self._gameboard[r][c+2]:
+                    print('COLUMNS EQUAL')
+                    for x in range(3):
+                        self._gameboard[r][c+x] = f'*{self._gameboard[r][c+x]}*' 
+                    return True
+                         
+        for r in range(len(self._gameboard)-2):
+            for c in range(len(self._gameboard[0])):
+                if not self._gameboard[r][c] == ' ' and self._gameboard[r][c] == self._gameboard[r+1][c] == self._gameboard[r+2][c]:
+                    print('ROWS EQUAL')
+                    for x in range(3):
+                        self._gameboard[r+x][c] = f'*{self._gameboard[r+x][c]}*' 
+                    return True
 
+        for r in range(len(self._gameboard)-2):
+            for c in range(len(self._gameboard[0])-2):
+                if not self._gameboard[r][c] == ' ' and self._gameboard[r][c] == self._gameboard[r+1][c+1] == self._gameboard[r+2][c+2]:
+                    print('DOWN DIAGONAL EQUAL')
+                    for x in range(3):
+                        self._gameboard[r+x][c+x] = f'*{self._gameboard[r+x][c+x]}*' 
+                    return True
+
+        for r in range(2, len(self._gameboard)):
+            for c in range(len(self._gameboard[0])-2):
+                if not self._gameboard[r][c] == ' ' and self._gameboard[r][c] == self._gameboard[r-1][c+1] == self._gameboard[r-2][c+2]:
+                    print('UP DIAGONAL EQUAL')
+                    for x in range(3):
+                        self._gameboard[r-x][c+x] = f'*{self._gameboard[r-x][c+x]}*' 
+                    return True
+        return False
+    
+
+    def update_gameboard(self):
+        #print('Updating Gameboard')
+
+        for r in range(len(self._gameboard)):
+            for c in range(len(self._gameboard[0])) :
+                if self._gameboard[r][c][0] == '*':
+                    self._gameboard[r][c] = ' '
         
-    
-    
-
+        for r in range(len(self._gameboard)-1):
+            for c in range(len(self._gameboard[0])) :
+                
+                if not self._gameboard[r][c][0] == ' ' and self._gameboard[r+1][c][0] == ' ':
+                    self.pass_time()
+                    self.update_gameboard()
     

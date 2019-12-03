@@ -25,6 +25,7 @@ def init_gamestate():
             
             gameboard.append(contents)
         gamestate.set_gameboard(gameboard)
+        gamestate.update_gameboard()
 
     return gamestate   
 
@@ -33,6 +34,14 @@ def commands(gamestate: mechanics.GameState):
     faller = mechanics.Faller()
     faller.set_max_columns(gamestate.get_columns())
     while True:
+        matched = gamestate.check_matches()
+        display(gamestate)
+        if matched:
+            #display(gamestate)
+            gamestate.update_gameboard()
+            #display(gamestate)
+            continue
+
         command = input()
         
         #try:
@@ -40,6 +49,7 @@ def commands(gamestate: mechanics.GameState):
             faller.get_colors()
             gamestate.pass_time()
             gamestate.update_faller(faller)
+            
         elif command[0] == 'F':
             command = command.split()
             faller = mechanics.Faller()
@@ -58,15 +68,16 @@ def commands(gamestate: mechanics.GameState):
             gamestate.update_faller(faller)
         elif command[0] == 'Q':
             break 
-        
+        else:
+            print("OOP, SOMETHING AIN'T RIGHT")
         #except IndexError:
          #   pass
-
-        display(gamestate)
+        
+        
 
 
 def display(gamestate):
-    print(gamestate.get_gameboard())
+    #print(gamestate.get_gameboard())
     gameboard = gamestate.get_gameboard()
 
     output = ''
@@ -90,7 +101,6 @@ def display(gamestate):
 
 if __name__ == "__main__":
     gamestate = init_gamestate()
-    display(gamestate)
     commands(gamestate)
     
     
