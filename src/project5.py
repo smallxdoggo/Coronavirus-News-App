@@ -4,7 +4,7 @@ import columns_view
 def run() -> None:
     pygame.init()
 
-    surface = pygame.display.set_mode((600, 600))
+    surface = pygame.display.set_mode((int(300*1.5), int(650*1.5)))
 
     running = True
 
@@ -13,8 +13,8 @@ def run() -> None:
     circle_center_x = 350
     circle_center_y = 300
 
-    jewel = columns_view.Jewel(surface)
-    jewel.color('red')
+    #jewel = columns_view.Jewel(surface)
+    #jewel.color('red')
 
     gameboard = columns_view.Gameboard(surface, 13, 6)
     
@@ -33,7 +33,8 @@ def run() -> None:
 
         #jewel.draw()
         gameboard.draw_board()
-        
+
+        gameboard.fill_with_jewels()
         
         pygame.display.flip()
 
