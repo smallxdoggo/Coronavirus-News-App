@@ -45,6 +45,7 @@ class Gameboard:
         self._points = []
         
 <<<<<<< HEAD
+<<<<<<< HEAD
         self._jewels = []
         self._gameboard = gameboard
     
@@ -65,6 +66,9 @@ class Gameboard:
                 self._jewels[r].append(Jewel(self._surface, rect))
                 self._jewels[r][c].color(self._gameboard[r+2][c-1])
                 self._jewels[r][c].draw()
+=======
+        
+>>>>>>> parent of c897a5d... Filled whole board with jewels
 =======
         
 >>>>>>> parent of c897a5d... Filled whole board with jewels
