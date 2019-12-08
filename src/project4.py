@@ -37,8 +37,8 @@ def init_gamestate():
 
 def commands(gamestate: mechanics.GameState):
     
-    faller = mechanics.Faller()
-    faller.set_max_columns(gamestate.get_columns())
+    
+    
     while True:
         matched = gamestate.check_matches()
         display(gamestate)

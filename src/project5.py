@@ -1,36 +1,43 @@
 import pygame
 import columns_view
+import mechanics
 
 def run() -> None:
     pygame.init()
 
-    surface = pygame.display.set_mode((400, 950))
+    surface = pygame.display.set_mode((400, 700))
 
     running = True
 
-    color_amount = 0
     clock = pygame.time.Clock()
-    circle_center_x = 350
-    circle_center_y = 300
+
+    rows = 13
+    columns = 6
 
     #jewel = columns_view.Jewel(surface)
     #jewel.color('red')
 
     board = [[' ', ' ', ' ', ' ', ' ', ' '], [' ', ' ', ' ', ' ', ' ', ' '], ['S', 'T', 'V', 'S', 'S', 'S'], ['W', 'S', 'X', 'S', 'Y', 'S'], [' ', ' ', ' ', ' ', 'S', ' '], ['S', ' ', 'S', ' ', 'S', ' '], ['S', 'S', ' ', ' ', 'S', 'S'], ['S', ' ', ' ', 'S', 'S', ' '], [' ', ' ', ' ', ' ', ' ', ' '], ['S', 'S', 'S', ' ', ' ', ' '], ['S', ' ', 'S', ' ', 'S', ' '], [' ', ' ', ' ', ' ', ' ', ' '], [' ', ' ', ' ', ' ', ' ', ' '], [' ', ' ', ' ', ' ', ' ', ' '], [' ', ' ', ' ', ' ', ' ', ' ']]
-    gameboard = columns_view.Gameboard(surface, 13, 6, board)
+    gameboard = columns_view.Gameboard(surface, rows, columns, board)
+    
+    gamestate = mechanics.GameState(rows, columns)
+    gamestate.set_gameboard(board)
+
+    faller = mechanics.Faller()
+    faller.set_max_columns(gamestate.get_columns())
     
     while running:
-        clock.tick(30)
+        clock.tick(1)
         
         for event in pygame.event.get(): 
             if event.type == pygame.QUIT:
                 running = False
-        #color_amount = (color_amount + 1) % 256
 
-        circle_center_x -= 1
-        circle_center_y += 1
-      
-        surface.fill(pygame.Color(color_amount, color_amount, color_amount))
+        
+        gamestate.pass_time()
+        board = gamestate.get_gameboard()
+
+        surface.fill(pygame.Color(0, 0, 0))
 
         #jewel.draw()
         gameboard.draw_board()

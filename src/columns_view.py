@@ -11,25 +11,43 @@ class Jewel:
         self._rect = rect
         
     def color(self, color):
-        try:
+        
+        if color == ' ':
+            self._color = pygame.Color(0, 0, 0) # black/background color
+        elif color[0] == 'S':
+            self._color = pygame.Color(200, 95, 95) # blue
+        elif color[0] == 'T':
+            self._color = pygame.Color(66, 135, 245) # red
+        elif color[0] == 'V':
+            self._color = pygame.Color(41, 186, 53) # green
+        elif color[0] == 'W':
+            self._color = pygame.Color(255, 162, 23) # orange
+        elif color[0] == 'X':
+            self._color = pygame.Color(135, 23, 255) # purple
+        elif color[0] == 'Y':
+            self._color = pygame.Color(255, 25, 240) # pink
+        elif color[0] == 'Z':
+            self._color = pygame.Color(150, 255, 252) # light teal
+        
+        if len(color) > 1:
             if color == ' ':
                 self._color = pygame.Color(0, 0, 0) # black/background color
-            elif color[0] == 'S':
+            elif color[1] == 'S':
                 self._color = pygame.Color(200, 95, 95) # blue
-            elif color[0] == 'T':
+            elif color[1] == 'T':
                 self._color = pygame.Color(66, 135, 245) # red
-            elif color[0] == 'V':
+            elif color[1] == 'V':
                 self._color = pygame.Color(41, 186, 53) # green
-            elif color[0] == 'W':
+            elif color[1] == 'W':
                 self._color = pygame.Color(255, 162, 23) # orange
-            elif color[0] == 'X':
+            elif color[1] == 'X':
                 self._color = pygame.Color(135, 23, 255) # purple
-            elif color[0] == 'Y':
+            elif color[1] == 'Y':
                 self._color = pygame.Color(255, 25, 240) # pink
-            elif color[0] == 'Z':
+            elif color[1] == 'Z':
                 self._color = pygame.Color(150, 255, 252) # light teal
-        except IndexError:
-            pass    
+        
+            
     def draw(self):
         pygame.draw.rect(self._surface, self._color, self._rect)
         
