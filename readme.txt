@@ -4,3 +4,8 @@ rotate
 freeze
 match
 endgame
+
+
+Jewel 
+
+Board 
