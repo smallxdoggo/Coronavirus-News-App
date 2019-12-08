@@ -1,13 +1,12 @@
 import pygame
 
 class Jewel:
-    def __init__(self, surface, rect):
+    def __init__(self, surface):
         super().__init__()
         self._radius = 5
 
         self._surface = surface
         self._color = pygame.Color(225, 225, 225)
-        self._rect = rect
         
     def color(self, color):
         try:
@@ -30,8 +29,7 @@ class Jewel:
         except IndexError:
             pass    
     def draw(self):
-        pygame.draw.rect(self._surface, self._color, self._rect)
-
+        pygame.draw.circle(self._surface, self._color, (300, 300), 100)
         
 
         
@@ -44,7 +42,9 @@ class Gameboard:
         self._surface = surface
         self._color = pygame.Color(255, 255, 255)
         self._length = 20
+        self._points = []
         
+<<<<<<< HEAD
         self._jewels = []
         self._gameboard = gameboard
     
@@ -65,6 +65,9 @@ class Gameboard:
                 self._jewels[r].append(Jewel(self._surface, rect))
                 self._jewels[r][c].color(self._gameboard[r+2][c-1])
                 self._jewels[r][c].draw()
+=======
+        
+>>>>>>> parent of c897a5d... Filled whole board with jewels
 
         
 
@@ -73,7 +76,7 @@ class Gameboard:
             pygame.draw.line(self._surface, self._color, ((column+1)*(self._surface.get_width()/self._columns), 0), ((column+1)*(self._surface.get_width()/self._columns), self._surface.get_height() ) )
 
         for row in range(self._rows):
-            pygame.draw.line(self._surface, self._color, (0, (row+1)*(self._surface.get_height()/self._rows)), (self._surface.get_width(), (row+1)*(self._surface.get_height()/self._rows)))
+            pygame.draw.line(self._surface, self._color, (0, (row+1)*(self._surface.get_height()/self._rows)), (self._surface.get_width(), (row+1)*(self._surface.get_height()/self._rows)) )
 
 
 
