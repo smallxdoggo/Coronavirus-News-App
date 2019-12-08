@@ -16,6 +16,7 @@ def run() -> None:
     #jewel = columns_view.Jewel(surface)
     #jewel.color('red')
 
+    
     gameboard = columns_view.Gameboard(surface, 13, 6)
     
     while running:

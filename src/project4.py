@@ -21,14 +21,14 @@ def init_gamestate():
         gamestate.empty_gameboard()
         
     elif begin == 'CONTENTS':
-        print('is CONTENTS')
+        #print('is CONTENTS')
         gameboard = []
         for x in range(rows):
             contents = list(input())
             
             gameboard.append(contents)
 
-        print(gameboard)    
+        #print(gameboard)    
         gamestate.set_gameboard(gameboard)
         gamestate.update_gameboard()
 
